@@ -112,7 +112,7 @@ categories = [{
 
 data/eval_tomato フォルダ内評価用静止画ファイル（アノテーションなし）
 | File名      |サイズ     |記事                  | 
-|------------:|---------:|:---------------------|
+|:------------:|---------:|:---------------------|
 |eval_001.jpg|640×480 |ミニトマト、水滴付き|1
 |eval_002.jpg|640×480 |トマト、水滴付き|
 |eval_003.jpg|640×480 |ミニトマト|
@@ -124,3 +124,65 @@ data/eval_tomato フォルダ内評価用静止画ファイル（アノテーシ
 |eval_009.jpg|640×427 |リンゴ、木成り|
 |eval_010.jpg|427×640 |リンゴ、木成り|
 
+data/video_tomato フォルダ内評価用動画ファイル（アノテーションなし）  
+| File名      |サイズ     |記事                  | 
+|:------------:|---------:|:---------------------|
+|tomato1.mp4|960×540 |00:00:08, 30.00 flm/s|
+|tomato2.mp4|640×480 |00:00:03, 29.97 flm/s|
+|tomato3.mp4|640×480 |00:00:58, 29.97 flm/s|
+スマートフォン撮影したオリジナルファイルは、サイズ：
+640×360、フレームレート：24.00flm/sで記録されているので、
+PC上の動画編集ソフトにて編集を実施、
+また音声データを削除。
+
+## ５．フレームワーク事前調査
+今回使用するMMDetectionフレームワークのチュートリアルを再現する。 
+これによりフレームワークの使い方を身に付けるとともに、正常にインスタンス・セグメンテーションが実行
+できる環境を構築する。 
+再現実行するチュートリアルは、google Colab環境でGPUを使用することを前提とし、Mask R-CNNを
+使ったものを選定する。 
+https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_Tutorial.ipynb 
+この実施結果を[”05prelim_survey.ipynb”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/05prelim_survey.ipynb) にて示す。 
+
+【実施結果】
+MMDetection v2.24.0 ～v2.25.0（現時点の最新リリース版）では、上記チュートリアルはエラーとなる。
+
+下記の通りこのエラーを解消した結果、pretraind modelを使ってのセグメンテーション動作の確認、および新たなdatasetを使い、風船の有無のみのクラスをセグメントするために、ファインチューニング学習させる方法の動作確認を行った。
+
+症状： tools/train.pyを実行すると、”### AttributeError: ‘ConfigDict’ object has no attribute ‘device’”エラーが発生する。  
+なお、参照しているチュートリアルの実行環境はMMDetection v2.21.0であることが示されている。  
+このエラーについては、v2.24.0リリース後、たびたびＧｉｔＨｕｂ上issueとして報告され、対策提案がなされている。その対策を実施しようとしたが、自分の環境では解決しなかった。  
+対策：MMDetection v2.23.0にバージョンダウンすることで解決し、チュートリアルの結果を確認できた。  
+なおその際は、mmcvについても最新版（1.5.x）ではなく、1.3.17にバージョンダウンさせる必要がある。  
+
+## ６．LaboloTomato事前学習モデルの検証
+実施結果を[”06LaboroTomato_verif.ipynb”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/06LaboloTomat_verif.ipynb)にて示す。  
+1. MMDetectionのロード  
+2. LaboroTomato model実行環境の再現  
+3. LaboroTomato/test データによる正当性の確認（validation）  
+画像161枚、検証時間：0.1～0.3task/sなので、画像1枚当たり3~10秒程度を要している。  
+Average PrecisionはBoundary Boxについて64.7%、セグメンテーションについて66%。  
+LaboroTomato GitHub上に記載された訓練時データでは「bbox AP:64.3, mask AP:65.7」なので、  
+ほぼ再現されていると判断できる。 
+
+|---------------|--------:|---------------|--------:|
+|'bbox_mAP' |0.647 |'segm_mAP’ |0.66|
+|'bbox_mAP_50’ |0.822 |'segm_mAP_50' |0.818|
+|'bbox_mAP_75' |0.735 |'segm_mAP_75' |0.736|
+|'bbox_mAP_s' |0.0 |'segm_mAP_s' |0.0|
+|'bbox_mAP_m' |0.146 |'segm_mAP_m' |0.131|
+|'bbox_mAP_l' |0.681 |'segm_mAP_l' |0.697|
+
+4. 新たに準備したデータによる検証（verification） 
+| File名      |結果     |記事                  | 
+|:------------:|:---------:|:---------------------|
+|eval_001.jpg| × |水滴がつくと正しく判定できない。水滴をトマトと誤検出。|
+|eval_002.jpg| △ |奥の2個は葉っぱ、水滴に紛れて認識できていない|
+|eval_003.jpg| △ |光線、枝の影などの影響か、2個重なっていると誤検出|
+|eval_004.jpg| △ |茎やヘタ部分で仕切られると、複数有りと誤検出|
+|eval_005.jpg| △ |同上|
+|eval_006.jpg| 〇 |箱に数多く有るが良好に検出、黄色トマトは未成熟と認識|
+|eval_007.jpg| 〇 |    |
+|eval_008.jpg| × |ピンぼけ写真だとかなり未検出、またミニを通常サイズと誤認識している|
+|eval_009.jpg| × |リンゴは学習していないのでトマトと誤認識される|
+|eval_010.jpg| × |同上|
