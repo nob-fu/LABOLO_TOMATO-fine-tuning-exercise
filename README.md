@@ -33,5 +33,49 @@ Windowsで利用できるアノテーション用ツールとしては、labelme
  SOLOv2：https://arxiv.org/abs/2003.10152 (Wang et al., 2020)    
 特徴：高精度かつ高速 
 
-![image2_2](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/images/image2_2.png)
- 
+![image2_1](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image2_1.png)  
+![image2_2](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image2_2.png)  
+
+## ３．実施方針の決定
+a. Laboro Tomato Datasetを利用し、MMDtectionフレームワーク上でMask R-CNNモデルの検証を行う  
+b. YOLACTモデルをファインチューニングさせ、Mask R-CNNモデルとの比較検証を行う  
+c. 学習(train)、評価(test)用データはLaboro Tomatoを使い、MMDetectionフレームワークで実行する  
+d. 上記とは別に、検証用データとしてスマートフォン撮影動画・静止画、ロイヤルティフリー画像を使用する  
+e. 本課題中では、検証用データにはアノテーションを行わず、出力された推定結果を目視確認して、定性的な評価と考察のみ行う  
+f. 以下のステップで実施する  
+    1) MMDetectionフレームワークの動作確認、取扱い習得
+    公開tutorialによるMMDetectionの実行環境構築、動作確認
+    https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_InstanceSeg_Tutorial.ipynb
+    2) Laboro Tomato dataset, pretrained modelの検証  
+    実行環境を再現、test dataによる正当性の確認（validation）、新たに準備したデータによる検証（verification）  
+    3) Laboro Tomato datasetを使い、YOLACT modelに切り替えての検証  
+    実行環境構築（COCO2017学習済みconfig）、train dataによるファインチューニング、test dataによる評価・計測（evaluation）、新たに準備したデータによる検証（verification）
+
+## ４．データセット準備
+...
+name: tomato_mixed    # 学習用：643、評価用：161のjpegファイル
+images: 643 train, 161 test
+cls_num: 6
+cls_names: b_fully_ripened, b_half_ripened, b_green,
+           l_fully_ripened, l_half_ripened, l_green
+# トマト：成熟、中間、未成熟、ミニトマト：成熟、中間、未成熟の６クラス
+total_bboxes: train[7781], test[1,996]
+bboxes_per_class:
+    *Train: b_fully_ripened[348], b_half_ripened[520], b_green[1467],
+            l_fully_ripened[982], l_half_ripened[797], l_green[3667]
+    *Test:  b_fully_ripened[72], b_half_ripened[116], b_green[387],
+            l_fully_ripened[269], l_half_ripened[223], l_green[929]
+...
+
+datasetディレクトリ構造
+...
+'''
+data  
+├── laboro_tomato  
+    ├── annotations ### COCO annotation  
+    │ ├── train.json, test.json  
+    ├── train ### train image datasets, 643 jpegファイル  
+    ├── test ### test image datasets, 161 jpegファイル  
+### image_resolutions: 3024x4032, 3120x4160の2種混在  
+'''
+...
