@@ -52,6 +52,7 @@ f. 以下のステップで実施する
   実行環境構築（COCO2017学習済みconfig）、train dataによるファインチューニング、test dataによる評価・計測（evaluation）、新たに準備したデータによる検証（verification）
 
 ## ４．データセット準備 
+Laboro Tomatoデータの内訳
 ~~~
 name: tomato_mixed    # 学習用：643、評価用：161のjpegファイル
 images: 643 train, 161 test
@@ -79,6 +80,7 @@ data
 ### image_resolutions: 3024x4032, 3120x4160の2種混在  
 '''
 ~~~
+
 COCO annotation 形式jsonファイル構造：
 ~~~
 {
@@ -107,3 +109,17 @@ categories = [{
 "supercategory": str,
 }]
 ~~~
+
+data/eval_tomato フォルダ内評価用静止画ファイル（アノテーションなし）
+| :File名: |:サイズ:   |:記事:              | 
+|eval_001.jpg|640×480 |ミニトマト、水滴付き|
+|eval_002.jpg|640×480 |トマト、水滴付き|
+|eval_003.jpg|640×480 |ミニトマト|
+|eval_004.jpg|640×427 |トマト|
+|eval_005.jpg|427×640 |トマト|
+|eval_006.jpg|1920×1280 |ミニトマト、箱入り、多品種|
+|eval_007.jpg|640×640 |ミニトマト|
+|eval_008.jpg|640×360 |ミニトマト、動画ファイルからカットした為ピンボケ気味|
+|eval_009.jpg|640×427 |リンゴ、木成り|
+|eval_010.jpg|427×640 |リンゴ、木成り|
+
