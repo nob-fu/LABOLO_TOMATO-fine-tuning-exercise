@@ -1,6 +1,6 @@
 # LABOLO_TOMATO fine-tuning exercise
 # プロダクト開発演習
-
+![image_header](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image_header.png)  
 ## １．テーマ選定
 - 目的： 農作物生産作業の効率化、省人化
 - 背景： 日本の食料自給率低下、農業従事者の高齢化の一方で、人工知能、高速通信（５G）、ドローン、ロボティクスなどICT技術拡大を背景として、スマート農業への期待が高まっている。
@@ -165,14 +165,14 @@ Average PrecisionはBoundary Boxについて64.7%、セグメンテーション�
 LaboroTomato GitHub上に記載された訓練時データでは「bbox AP:64.3, mask AP:65.7」なので、  
 ほぼ再現されていると判断できる。 
 
-|　　 |　　 |　　 |　　|
-|---------------|--------:|---------------|--------:|
-|'bbox_mAP' |0.647 |'segm_mAP’ |0.66|
-|'bbox_mAP_50’ |0.822 |'segm_mAP_50' |0.818|
-|'bbox_mAP_75' |0.735 |'segm_mAP_75' |0.736|
-|'bbox_mAP_s' |0.0 |'segm_mAP_s' |0.0|
-|'bbox_mAP_m' |0.146 |'segm_mAP_m' |0.131|
-|'bbox_mAP_l' |0.681 |'segm_mAP_l' |0.697|
+|　　 |　　 ||　　 |　　|
+|---------------|--------:|-|---------------|--------:|
+|'bbox_mAP' |0.647 ||'segm_mAP’ |0.66|
+|'bbox_mAP_50’ |0.822 ||'segm_mAP_50' |0.818|
+|'bbox_mAP_75' |0.735 ||'segm_mAP_75' |0.736|
+|'bbox_mAP_s' |0.0 ||'segm_mAP_s' |0.0|
+|'bbox_mAP_m' |0.146 ||'segm_mAP_m' |0.131|
+|'bbox_mAP_l' |0.681 ||'segm_mAP_l' |0.697|
 
 4. 新たに準備したデータによる検証（verification）
 
@@ -188,3 +188,102 @@ LaboroTomato GitHub上に記載された訓練時データでは「bbox AP:64.3,
 |eval_008.jpg| × |ピンぼけ写真だとかなり未検出、またミニを通常サイズと誤認識している|
 |eval_009.jpg| × |リンゴは学習していないのでトマトと誤認識される|
 |eval_010.jpg| × |同上|
+
+動画ファイルtomato3.mp4は58秒、1752フレームであるが、判定速度は5.3 task/sであった。  
+1 taskを1 flameと読み替えれば、論文中に記載の5fps並みの実行速度は出ているといえる。  
+結果動画を見る限りでは、葉陰に隠れているものは検出できない場合がたびたびあるが、全体的には良好な判定結果のように見える。  
+なお、今回の実行環境は、Google Colab Pro、GPU：有り、メモリ：ハイメモリで演算させた。  
+‘GPU 0’: ‘Tesla P100-PCIE-16GB’ （GPUメモリ：25.46GB）  
+
+## ７．別モデルでの学習・評価・検証
+公開されているLaboro Tomato Datasetを使い、別の特徴を持つYOLACTモデルにて、インスタンス・セグメンテーションの検証を行う。
+Mask R-CNNモデルと比較し、YOLACTモデルは判定(infelence)速度が速く、条件次第では30fpsを上回るとされている。もしもその速度がエッジデバイスでも出るのであれば、WebCamからの動画入力に対して、ローカルにリアルタイムでセグメンテーション、クラス判定が行えると期待できるため、今回比較対象として取り上げる。
+実施結果を[”07YOLACT_verif.ipynb”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/07YOLACT_verif.ipynb)にて示す。
+
+1. MMDetectionのロード
+2. LaboroTomato dataset、YOLACTモデル実行環境の構築
+config設定用ファイルyolact_r50_1x8_coco.pyを、LaboroTomato dataset、GoogleColab環境に合わせてyolact_r50_1x8_coco_tomato.pyに書き換える。
+この時、特にdata = dict()内のsample_per_gpu, workers_per_gpuの各ハイパーパラメタの調整が難しく、
+次節７．３の学習時のエラー発生具合を見ながら、最終的には以下の値に調整した。
+(4, 2), (8, 1), (1, 1)などの組み合わせでは早々に実行環境にてRun Timeエラーが発生するため、
+最終的に(4, 1)の値に調整している。
+
+![image7_1](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image7_1.png)  
+
+3. LaboroTomato/train データによる学習（training）
+学習前にCOCOデータで事前学習済みのcheckpoint：yolact_r50_1x8_coco_20200908-
+f38d58df.pthをロードさせ、これをLaboroTomato Trainデータによってファインチューニングさせる。  
+学習は、single GPUに対し4sampleを処理させるので、画像643枚の学習について、1epoch辺りでは161
+回のバッチを通す設定となっている。  
+今回、12epoch実行させる設定としていたが、Epoch 2を過ぎた後、Epoch3の途中でRun Timeエラーが発生
+する事態となった。（再現性あり）。1epoch辺り20～30分程度要しており、エラー発生時システムRAMの異常
+が見られるので、実行環境のリソース不足と推定し、これ以上の実行を断念した。  
+“RuntimeError: DataLoader worker (pid 1764) is killed by signal: Killed. “  
+![image7_2](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image7_2.png)  
+なお、Epoch2までのAP、ARについては、以下に示す値となっている。  
+YOLACTのCOCO val ではmAP:29.0と公開されているので、それなりには使えるの
+ではと推定し、更に評価・検証を継続した。  
+  - Epoch 1終了時  bbox AP: 0.146, segm AP: 0.159 # 平均Precision  
+                   bbox AR: 0.501, segm AR: 0.548 # 平均Recall  
+  - Epoch 2終了時  bbox AP: 0.269, segm AP: 0.285  
+                   bbox AR: 0.546, segm AR: 0.548  
+
+4. LaboroTomato/testデータによる評価（validation）
+学習中Epoch2まで完了の後、Epoch3途中でgoogle ColabのRun Timeエラー発生！！  
+エラー発生前のEpch 2までの学習結果をtestデータを使い評価する。このためconfigデータを書き換える
+この結果は、当然ながら、学習時のEpoch2終了時点の評価結果と一致した値となった。  
+  - bbox AP: 0.269, segm AP: 0.285  
+  - bbox AR: 0.546, segm AR: 0.548  
+これにて、Laboro Tomatoデータセットでの学習済みモデルが準備できたとみなし、
+次節にて、新データによる検証を行うこととした。  
+
+5. 新たに準備したデータによる検証（verification）
+detectorの構築を行い、検証用の画像、動画ファイルを判別させ、出力結果を目視評価する。
+
+| File名      |結果     |MあskRCNN時|記事                  | 
+|:------------:|:---------:|:---------:|:---------------------|
+|eval_001.jpg| △| × |水滴がついていてもトマトを検出するが、サイズ（通常/ミニ）の区別が不正確|
+|eval_002.jpg| 〇| △ |奥のトマト（２個中の１個）まで検出できている|
+|eval_003.jpg| ×| △ |Bboxの位置がずれているか、または目立つ個体が検出できていない|
+|eval_004.jpg| ×| △ |熟成したトマト２個が検出できておらず、未成熟の２個も確率値が低い|
+|eval_005.jpg| △| △ |マスクはできているが、確率値が低い|
+|eval_006.jpg| △| 〇 |成熟したトマトの検出ができていなかったり、クラスを誤る|
+|eval_007.jpg| 〇| 〇 |    |
+|eval_008.jpg| △| × |MaskR-CNNと比較して多少良い|
+|eval_009.jpg| ×| × |リンゴは学習していないのでトマトと誤認識される|
+|eval_010.jpg| ×| × |同上|
+
+動画ファイルtomato3.mp4は58秒、1752フレームであるが、判定速度は6.8 task/sであった。  
+Mask R-CNNモデルの場合5.3 task/sだったので、約28%改善しているが、論文中で示されている30fpsには程
+遠く、十分なパフォーマンスが出ていない。  
+実行環境の問題が大きいのかもしれない。  
+今回の実行環境は、Google Colab Pro、GPU：有り、メモリ：ハイメモリで演算させた。  
+‘GPU 0’: ‘Tesla P100-PCIE-16GB’ （GPUメモリ：25.46GB）  
+
+## ８．まとめと考察
+### ８．１ まとめ
+1. Laboro Tomatoのデータセット、学習済みモデルにより、Mask R-CNNモデルによるインスタンス・セ
+グメンテーションが実現されていることが確認できた。  
+2. Mask R-CNNモデルでは重なったオブジェクト、大小のオブジェクトが含まれるケースでも比較的良
+好に検出できている。（主観的意見） 
+3. 一方で、判定処理時間は5fps程度と遅く、リアルタイムでのWebCam動画判定は難しいという特徴
+も確認できた。  
+4. 別のモデルとなるYOLACTについて、学習中に実行環境のリソース不足と思われる原因で異常終
+了してしまい、十分な確認はできなかった。  
+5. 異常終了前の学習不完全なDetectorを使っても、ある程度のインスタンス・セグメンテーションが
+実現できていることは確認できた。一方、その特徴である判定速度については、確認が取れな
+かった。  
+
+### ８．２ 考察
+1. 今回、新規画像による検証結果をresultファイルとしても保存してあり、BBox位置データ（中心位
+置: x, yとサイズ：h, w）、クラスラベルなどが格納されているはずであるが時間が足りず、その
+データ活用を行っていない。検出した果実の位置、成熟度別の個数などのデータに活用できると
+考えるが、それは今後の課題となるだろう。  
+2. 本演習の当初の狙いとしていた、農作物の収穫自動化を想定した場合、現状では収穫ロボットに
+よる画像認識、収穫処理に使うには、まだ性能不足と考えられる。特にマニピュレータで収穫させ
+るためには、2次元画像上の物体位置ではなく、RGB-Dカメラなどを使った3次元位置の検出が必
+要であり、この点でも更に改善と試行が必要と考える。  
+3. トマトなどの果実、野菜の収穫の場合、茎や葉の重なり、さらに光線やそれらの影の影響で、正し
+く対象物の成熟状態を判定させることが難しい。判定速度、判定精度ともに高いSOLOｖ２など、新
+しいモデルの評価も必要になるだろう。  
+
