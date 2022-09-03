@@ -12,16 +12,16 @@
 ## ２．参考情報の収集
  1. 公開されている学習用ラベル済みトマト画像と学習済みモデル
 株式会社LABORO.AIがトマト画像・物体検出データセット『Laboro Tomato』を公開（2020-07-14）。  
-  (https://laboro.ai/activity/column/engineer/laboro-tomato/)  
-  (https://github.com/laboroai/LaboroTomato)  
+  [ ](https://laboro.ai/activity/column/engineer/laboro-tomato/)  
+  [ ](https://github.com/laboroai/LaboroTomato)  
  2. インスタンス・セグメンテーションをサポートするPyTorch対応ツールキット
 PyTorch向けの物体検出ライブラリーとしては、Detectron2（Meta社）、MMDetection（OpenMMLab）などがある。なおLaboro TomatoではMMDetectionを使い、学習済みパラメタ（checkpoint)とそのMask R-CNNモデルのconfig情報、アノテーション済みdataset（MS COCO形式）を提供。  
-  (https://mmdetection.readthedocs.io/en/latest/)  
-  (https://github.com/open-mmlab/mmdetection)  
+  [ ](https://mmdetection.readthedocs.io/en/latest/)  
+  [ ](https://github.com/open-mmlab/mmdetection)  
  3. インスタンス・セグメンテーションのアルゴリズム動向
 物体検出モデル（分類：cls、回帰：BBox）としてはFaster R-CNN, YOLO, SSDなど、またインスタンス・セグメンテーション（cls, BBox, & mask）としては、Mask R-CNN(2017), YOLACT(2019), SOLO(2020)などがある。  
  4. 無料で利用可能なフリーライセンス画像ソース
-ロイヤルティフリーで利用可能な画像の提供サイトがあり、一定の条件下で学習用画像としても利用できるものもある。今回、検証用画像の一部に「写真AC」（ https://www.photo-ac.com/ ）の画像を利用する。（個人での商用利用可、加工可）  
+ロイヤルティフリーで利用可能な画像の提供サイトがあり、一定の条件下で学習用画像としても利用できるものもある。今回、検証用画像の一部に [写真AC](https://www.photo-ac.com/) の画像を利用する。（個人での商用利用可、加工可）  
 Windowsで利用できるアノテーション用ツールとしては、labelme（power shellから起動）、coco-annotator（docker コンテナ）などがある。（今回は使用せず）  
 
 - Mask R-CNN：https://arxiv.org/abs/1703.06870 (He et al., 2018)  
@@ -43,16 +43,16 @@ c. 学習(train)、評価(test)用データはLaboro Tomatoを使い、MMDetecti
 d. 上記とは別に、検証用データとしてスマートフォン撮影動画・静止画、ロイヤルティフリー画像を使用する  
 e. 本課題中では、検証用データにはアノテーションを行わず、出力された推定結果を目視確認して、定性的な評価と考察のみ行う  
 f. 以下のステップで実施する  
-    1) MMDetectionフレームワークの動作確認、取扱い習得
-    公開tutorialによるMMDetectionの実行環境構築、動作確認
-    https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_InstanceSeg_Tutorial.ipynb
-    2) Laboro Tomato dataset, pretrained modelの検証  
-    実行環境を再現、test dataによる正当性の確認（validation）、新たに準備したデータによる検証（verification）  
-    3) Laboro Tomato datasetを使い、YOLACT modelに切り替えての検証  
-    実行環境構築（COCO2017学習済みconfig）、train dataによるファインチューニング、test dataによる評価・計測（evaluation）、新たに準備したデータによる検証（verification）
+  1) MMDetectionフレームワークの動作確認、取扱い習得
+  公開tutorialによるMMDetectionの実行環境構築、動作確認
+  [ ](https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_InstanceSeg_Tutorial.ipynb)
+  2) Laboro Tomato dataset, pretrained modelの検証  
+  実行環境を再現、test dataによる正当性の確認（validation）、新たに準備したデータによる検証（verification）  
+  3) Laboro Tomato datasetを使い、YOLACT modelに切り替えての検証  
+  実行環境構築（COCO2017学習済みconfig）、train dataによるファインチューニング、test dataによる評価・計測（evaluation）、新たに準備したデータによる検証（verification）
 
-## ４．データセット準備
-...
+## ４．データセット準備 
+~~~
 name: tomato_mixed    # 学習用：643、評価用：161のjpegファイル
 images: 643 train, 161 test
 cls_num: 6
@@ -65,10 +65,10 @@ bboxes_per_class:
             l_fully_ripened[982], l_half_ripened[797], l_green[3667]
     *Test:  b_fully_ripened[72], b_half_ripened[116], b_green[387],
             l_fully_ripened[269], l_half_ripened[223], l_green[929]
-...
+~~~
 
 datasetディレクトリ構造
-...
+~~~
 '''
 data  
 ├── laboro_tomato  
@@ -78,4 +78,4 @@ data
     ├── test ### test image datasets, 161 jpegファイル  
 ### image_resolutions: 3024x4032, 3120x4160の2種混在  
 '''
-...
+~~~
