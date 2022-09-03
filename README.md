@@ -14,17 +14,17 @@
 **【テーマ】トマト画像（静止画、動画）に対するインスタンス・セグメンテーションを実施し、画像中、果実の位置を個別にマスクし、その成熟度（成熟、中間、未成熟）クラスを判定する**
 
 ## ２．参考情報の収集
- 1. 公開されている学習用ラベル済みトマト画像と学習済みモデル 
+ 1. 公開されている学習用ラベル済みトマト画像と学習済みモデル  
 株式会社LABORO.AIがトマト画像・物体検出データセット『Laboro Tomato』を公開（2020-07-14）。  
   (https://laboro.ai/activity/column/engineer/laboro-tomato/)  
   (https://github.com/laboroai/LaboroTomato)  
- 2. インスタンス・セグメンテーションをサポートするPyTorch対応ツールキット 
+ 2. インスタンス・セグメンテーションをサポートするPyTorch対応ツールキット  
 PyTorch向けの物体検出ライブラリーとしては、Detectron2（Meta社）、MMDetection（OpenMMLab）などがある。なおLaboro TomatoではMMDetectionを使い、学習済みパラメタ（checkpoint)とそのMask R-CNNモデルのconfig情報、アノテーション済みdataset（MS COCO形式）を提供。  
   (https://mmdetection.readthedocs.io/en/latest/)  
   (https://github.com/open-mmlab/mmdetection)  
- 3. インスタンス・セグメンテーションのアルゴリズム動向 
+ 3. インスタンス・セグメンテーションのアルゴリズム動向  
 物体検出モデル（分類：cls、回帰：BBox）としてはFaster R-CNN, YOLO, SSDなど、またインスタンス・セグメンテーション（cls, BBox, & mask）としては、Mask R-CNN(2017), YOLACT(2019), SOLO(2020)などがある。  
- 4. 無料で利用可能なフリーライセンス画像ソース 
+ 4. 無料で利用可能なフリーライセンス画像ソース  
 ロイヤルティフリーで利用可能な画像の提供サイトがあり、一定の条件下で学習用画像としても利用できるものもある。今回、検証用画像の一部に [写真AC](https://www.photo-ac.com/) の画像を利用する。（個人での商用利用可、加工可）  
 Windowsで利用できるアノテーション用ツールとしては、labelme（power shellから起動）、coco-annotator（docker コンテナ）などがある。（今回は使用せず）  
 
