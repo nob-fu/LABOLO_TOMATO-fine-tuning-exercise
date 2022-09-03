@@ -193,11 +193,13 @@ LaboroTomato GitHub上に記載された訓練時データでは「bbox AP:64.3,
 |eval_009.jpg| × |リンゴは学習していないのでトマトと誤認識される|
 |eval_010.jpg| × |同上|
 
-動画ファイルtomato3.mp4は58秒、1752フレームであるが、判定速度は5.3 task/sであった。  
+動画ファイル[tomato3.mp4](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/video_tomato/tomato3.mp4)は58秒、1752フレームであるが、判定速度は5.3 task/sであった。  
 1 taskを1 flameと読み替えれば、論文中に記載の5fps並みの実行速度は出ているといえる。  
 結果動画を見る限りでは、葉陰に隠れているものは検出できない場合がたびたびあるが、全体的には良好な判定結果のように見える。  
 なお、今回の実行環境は、Google Colab Pro、GPU：有り、メモリ：ハイメモリで演算させた。  
 ‘GPU 0’: ‘Tesla P100-PCIE-16GB’ （GPUメモリ：25.46GB）  
+[tomato3_out.mp4](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/tomato3_out.mp4)   
+
 
 ## ７．別モデルでの学習・評価・検証
 公開されているLaboro Tomato Datasetを使い、別の特徴を持つYOLACTモデルにて、インスタンス・セグメンテーションの検証を行う。
@@ -257,12 +259,14 @@ detectorの構築を行い、検証用の画像、動画ファイルを判別さ
 |eval_009.jpg| ×| × |リンゴは学習していないのでトマトと誤認識される|
 |eval_010.jpg| ×| × |同上|
 
-動画ファイルtomato3.mp4は58秒、1752フレームであるが、判定速度は6.8 task/sであった。  
+動画ファイル[tomato3.mp4](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/video_tomato/tomato3.mp4)は58秒、1752フレームであるが、判定速度は6.8 task/sであった。  
 Mask R-CNNモデルの場合5.3 task/sだったので、約28%改善しているが、論文中で示されている30fpsには程
 遠く、十分なパフォーマンスが出ていない。  
 実行環境の問題が大きいのかもしれない。  
 今回の実行環境は、Google Colab Pro、GPU：有り、メモリ：ハイメモリで演算させた。  
 ‘GPU 0’: ‘Tesla P100-PCIE-16GB’ （GPUメモリ：25.46GB）  
+[tomato3_yolact.mp4](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/tomato3_yolact.mp4)   
+
 
 ## ８．まとめと考察
 ### ８．１ まとめ
