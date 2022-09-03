@@ -266,7 +266,6 @@ Mask R-CNNモデルの場合5.3 task/sだったので、約28%改善している
 今回の実行環境は、Google Colab Pro、GPU：有り、メモリ：ハイメモリで演算させた。  
 ‘GPU 0’: ‘Tesla P100-PCIE-16GB’ （GPUメモリ：25.46GB）  
 [tomato3_yolact.mp4](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/tomato3_yolact.mp4)   
-https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/tomato3_yolact.mp4
 
 
 ## ８．まとめと考察
