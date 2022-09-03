@@ -2,7 +2,7 @@
 # プロダクト開発演習
 ![image_header](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image_header.png)  
 ## はじめに
-本演習は、2022年6月にディープ・ラーニング技術習得とJDLA主催ディープラーニング技術者資格（E資格）認定試験に向け取り組んだ学習の私的履歴である。
+本演習は、2022年6月にディープ・ラーニング技術習得とJDLA主催ディープラーニング技術者資格（E資格）取得のために取り組んだ学習の私的履歴である。
 フレームワークとしてPyTorchを使用して、Pythonでプログラミングを行い、Google Colab環境化で実行している。
 
 ## １．テーマ選定
