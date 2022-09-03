@@ -12,12 +12,12 @@
 ## ２．参考情報の収集
  1. 公開されている学習用ラベル済みトマト画像と学習済みモデル
 株式会社LABORO.AIがトマト画像・物体検出データセット『Laboro Tomato』を公開（2020-07-14）。  
-  [ ](https://laboro.ai/activity/column/engineer/laboro-tomato/)  
-  [ ](https://github.com/laboroai/LaboroTomato)  
+  (https://laboro.ai/activity/column/engineer/laboro-tomato/)  
+  (https://github.com/laboroai/LaboroTomato)  
  2. インスタンス・セグメンテーションをサポートするPyTorch対応ツールキット
 PyTorch向けの物体検出ライブラリーとしては、Detectron2（Meta社）、MMDetection（OpenMMLab）などがある。なおLaboro TomatoではMMDetectionを使い、学習済みパラメタ（checkpoint)とそのMask R-CNNモデルのconfig情報、アノテーション済みdataset（MS COCO形式）を提供。  
-  [ ](https://mmdetection.readthedocs.io/en/latest/)  
-  [ ](https://github.com/open-mmlab/mmdetection)  
+  (https://mmdetection.readthedocs.io/en/latest/)  
+  (https://github.com/open-mmlab/mmdetection)  
  3. インスタンス・セグメンテーションのアルゴリズム動向
 物体検出モデル（分類：cls、回帰：BBox）としてはFaster R-CNN, YOLO, SSDなど、またインスタンス・セグメンテーション（cls, BBox, & mask）としては、Mask R-CNN(2017), YOLACT(2019), SOLO(2020)などがある。  
  4. 無料で利用可能なフリーライセンス画像ソース
@@ -45,7 +45,7 @@ e. 本課題中では、検証用データにはアノテーションを行わ�
 f. 以下のステップで実施する  
   1) MMDetectionフレームワークの動作確認、取扱い習得
   公開tutorialによるMMDetectionの実行環境構築、動作確認
-  [ ](https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_InstanceSeg_Tutorial.ipynb)
+  (https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_InstanceSeg_Tutorial.ipynb)
   2) Laboro Tomato dataset, pretrained modelの検証  
   実行環境を再現、test dataによる正当性の確認（validation）、新たに準備したデータによる検証（verification）  
   3) Laboro Tomato datasetを使い、YOLACT modelに切り替えての検証  
@@ -78,4 +78,32 @@ data
     ├── test ### test image datasets, 161 jpegファイル  
 ### image_resolutions: 3024x4032, 3120x4160の2種混在  
 '''
+~~~
+COCO annotation 形式jsonファイル構造：
+~~~
+{
+"images": [image],
+"annotations": [annotation],
+"categories": [category]
+}
+image = {
+"id": int,
+"width": int,
+"height": int,
+"file_name": str,
+}
+annotation = {
+"id": int,
+"image_id": int,
+"category_id": int,
+"segmentation": RLE or [polygon],
+"area": float,
+"bbox": [x,y,width,height],
+"iscrowd": 0 or 1,
+}
+categories = [{
+"id": int,
+"name": str,
+"supercategory": str,
+}]
 ~~~
