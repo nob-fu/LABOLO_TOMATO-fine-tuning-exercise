@@ -146,7 +146,7 @@ PC上の動画編集ソフトにて編集を実施、
 再現実行するチュートリアルは、google Colab環境でGPUを使用することを前提とし、Mask R-CNNを
 使ったものを選定する。 
 https://github.com/open-mmlab/mmdetection/blob/master/demo/MMDet_Tutorial.ipynb 
-この実施結果を[”05prelim_survey.ipynb”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/05prelim_survey.ipynb) にて示す。 
+この実施結果を[”05prelim_survey.ipynb(pdf)”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/05prelim_survey.ipynb.pdf) にて示す。 
 
 【実施結果】
 MMDetection v2.24.0 ～v2.25.0（現時点の最新リリース版）では、上記チュートリアルはエラーとなる。
@@ -160,7 +160,7 @@ MMDetection v2.24.0 ～v2.25.0（現時点の最新リリース版）では、�
 なおその際は、mmcvについても最新版（1.5.x）ではなく、1.3.17にバージョンダウンさせる必要がある。  
 
 ## ６．LaboloTomato事前学習モデルの検証
-実施結果を[”06LaboroTomato_verif.ipynb”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/06LaboloTomat_verif.ipynb)にて示す。  
+実施結果を[”06LaboroTomato_verif.ipynb(pdf)”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/06LaboloTomat_verif.ipynb.pdf)にて示す。  
 1. MMDetectionのロード  
 2. LaboroTomato model実行環境の再現  
 3. LaboroTomato/test データによる正当性の確認（validation）  
@@ -204,7 +204,7 @@ LaboroTomato GitHub上に記載された訓練時データでは「bbox AP:64.3,
 ## ７．別モデルでの学習・評価・検証
 公開されているLaboro Tomato Datasetを使い、別の特徴を持つYOLACTモデルにて、インスタンス・セグメンテーションの検証を行う。
 Mask R-CNNモデルと比較し、YOLACTモデルは判定(infelence)速度が速く、条件次第では30fpsを上回るとされている。もしもその速度がエッジデバイスでも出るのであれば、WebCamからの動画入力に対して、ローカルにリアルタイムでセグメンテーション、クラス判定が行えると期待できるため、今回比較対象として取り上げる。
-実施結果を[”07YOLACT_verif.ipynb”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/07YOLACT_verif.ipynb)にて示す。
+実施結果を[”07YOLACT_verif.ipynb(pdf)”](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/07YOLACT_verif.ipynb.pdf)にて示す。
 
 1. MMDetectionのロード
 2. LaboroTomato dataset、YOLACTモデル実行環境の構築
