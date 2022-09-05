@@ -24,9 +24,6 @@ PyTorch向けの物体検出ライブラリーとしては、Detectron2（Meta�
   (https://github.com/open-mmlab/mmdetection)  
  3. インスタンス・セグメンテーションのアルゴリズム動向  
 物体検出モデル（分類：cls、回帰：BBox）としてはFaster R-CNN, YOLO, SSDなど、またインスタンス・セグメンテーション（cls, BBox, & mask）としては、Mask R-CNN(2017), YOLACT(2019), SOLO(2020)などがある。  
- 4. 無料で利用可能なフリーライセンス画像ソース  
-ロイヤルティフリーで利用可能な画像の提供サイトがあり、一定の条件下で学習用画像としても利用できるものもある。今回、検証用画像の一部に [写真AC](https://www.photo-ac.com/) の画像を利用する。（個人での商用利用可、加工可）  
-Windowsで利用できるアノテーション用ツールとしては、labelme（power shellから起動）、coco-annotator（docker コンテナ）などがある。（今回は使用せず）  
 
 - Mask R-CNN：https://arxiv.org/abs/1703.06870 (He et al., 2018)  
 特徴：B-Box高精度、多機能（姿勢検出に拡張可能）、～5 fps  
@@ -39,6 +36,11 @@ Windowsで利用できるアノテーション用ツールとしては、labelme
 
 ![image2_1](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image2_1.png)  
 ![image2_2](https://github.com/nob-fu/LABOLO_TOMATO-fine-tuning-exercise/blob/main/images/image2_2.png)  
+
+ 4. 無料で利用可能なフリーライセンス画像ソース  
+ロイヤルティフリーで利用可能な画像の提供サイトがあり、一定の条件下で学習用画像としても利用できるものもある。今回、検証用画像の一部に [写真AC](https://www.photo-ac.com/) の画像を利用する。（個人での商用利用可、加工可）  
+Windowsで利用できるアノテーション用ツールとしては、labelme（power shellから起動）、coco-annotator（docker コンテナ）などがある。（今回は使用せず）  
+
 
 ## ３．実施方針の決定
 a. Laboro Tomato Datasetを利用し、MMDtectionフレームワーク上でMask R-CNNモデルの検証を行う  
